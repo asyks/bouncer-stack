@@ -1,0 +1,25 @@
+version: '2'
+
+x-constants:
+    - &db-username admin
+    - &db-password pw123
+
+services:
+    postgres:
+        image: postgres:12.1-alpine
+        environment: 
+            POSTGRES_USER: *db-username
+            POSTGRES_PASSWORD: *db-password
+        ports:
+            - 5432:5432
+    pgbouncer:
+        image: pgbouncer/pgbouncer:1.12.0
+        environment:
+            DATABASES_HOST: postgres
+            DATABASES_PORT: 5432
+            DATABASES_USER: *db-username
+            DATABASES_PASSWORD: *db-password
+        links: 
+            - postgres:postgres
+        ports:
+            - 6432:6432
